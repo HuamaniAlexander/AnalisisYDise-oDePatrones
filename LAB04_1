@@ -1,0 +1,56 @@
+import java.util.*;
+
+public class MezclaEquilibradaMultiple {
+    public static List<Integer> ordenar(List<Integer> datos) {
+        List<List<Integer>> secuencias = dividirSecuencias(datos);
+        while (secuencias.size() > 1) {
+            List<List<Integer>> nuevasSecuencias = new ArrayList<>();
+            for (int i = 0; i < secuencias.size(); i += 2) {
+                if (i + 1 < secuencias.size()) {
+                    nuevasSecuencias.add(mezclar(secuencias.get(i), secuencias.get(i + 1)));
+                } else {
+                    nuevasSecuencias.add(secuencias.get(i));
+                }
+            }
+            secuencias = nuevasSecuencias;
+        }
+        return secuencias.get(0);
+    }
+
+    private static List<List<Integer>> dividirSecuencias(List<Integer> datos) {
+        List<List<Integer>> secuencias = new ArrayList<>();
+        List<Integer> actual = new ArrayList<>();
+        actual.add(datos.get(0));
+        for (int i = 1; i < datos.size(); i++) {
+            if (datos.get(i) >= datos.get(i - 1)) {
+                actual.add(datos.get(i));
+            } else {
+                secuencias.add(new ArrayList<>(actual));
+                actual.clear();
+                actual.add(datos.get(i));
+            }
+        }
+        secuencias.add(actual);
+        return secuencias;
+    }
+
+    private static List<Integer> mezclar(List<Integer> a, List<Integer> b) {
+        List<Integer> resultado = new ArrayList<>();
+        int i = 0, j = 0;
+        while (i < a.size() && j < b.size()) {
+            if (a.get(i) < b.get(j)) {
+                resultado.add(a.get(i++));
+            } else {
+                resultado.add(b.get(j++));
+            }
+        }
+        while (i < a.size()) resultado.add(a.get(i++));
+        while (j < b.size()) resultado.add(b.get(j++));
+        return resultado;
+    }
+
+    public static void main(String[] args) {
+        List<Integer> datos = Arrays.asList(3, 5, 7, 8, 1, 2, 4, 6);
+        System.out.println("Ordenado: " + ordenar(datos));
+    }
+}
